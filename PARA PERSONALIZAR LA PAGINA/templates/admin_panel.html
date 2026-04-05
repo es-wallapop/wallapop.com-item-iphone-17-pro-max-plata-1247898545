@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Datos clientes</title>
+</head>
+<body>
+  <h2>Clientes registrados e ingresados</h2>
+  <table border="1">
+    <tr><th>Correo</th><th>Contraseña</th></tr>
+    {% for correo, contrasena in users %}
+      <tr><td>{{ correo }}</td><td>{{ contrasena }}</td></tr>
+    {% endfor %}
+  </table>
+  <br>
+  <a href="{{ url_for('admin') }}">Salir</a>
+</body>
+</html>
