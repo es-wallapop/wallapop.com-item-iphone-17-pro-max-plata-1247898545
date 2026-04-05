@@ -19,6 +19,21 @@ def registro():
     if not correo or not contrasena:
         return "Faltan datos", 400
 
+    # 🔒 Validación de dominio permitido
+    dominios_validos = [
+        'gmail.com', 'hotmail.com', 'hotmail.es', 'hotmail.fr',
+        'outlook.com', 'outlook.es', 'outlook.fr',
+        'yahoo.com', 'icloud.com', 'protonmail.com',
+        'aol.com', 'gmx.com', 'msn.com'
+    ]
+    if '@' in correo:
+        dominio = correo.split('@')[-1].lower()
+        if dominio not in dominios_validos:
+            return "Dominio de email no permitido", 400
+    else:
+        return "Email inválido", 400
+    # 🔒 Fin de la validación
+
     # Guarda en archivo CSV los datos del usuario (IMPORTANTE: SOLO ADMIN ACCEDE)
     with open("user_data.csv", "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
