@@ -55,6 +55,8 @@ def admin():
     else:
         return render_template("admin_login.html", error=None)
 
+import os
+
 if __name__ == "__main__":
-    # Usalo localmente con: python app.py
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
