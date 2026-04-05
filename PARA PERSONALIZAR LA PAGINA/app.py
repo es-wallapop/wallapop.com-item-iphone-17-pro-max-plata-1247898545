@@ -46,7 +46,9 @@ def registro():
 def login():
     correo = request.form.get("correo")
     contrasena = request.form.get("contrasena")
-    if not correo or not contrasena:
+    if not correo:
+        return "Email inválido", 400
+    if not contrasena:
         return "Faltan datos", 400
 
     # 🔒 Validación de dominio permitido
