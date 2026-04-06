@@ -347,70 +347,6 @@ footer{background:var(--wh);border-top:1px solid var(--bdr);padding:38px 20px}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── ADMIN ── */
-.adm{position:fixed;top:0;right:0;bottom:0;width:415px;
-  background:var(--wh);box-shadow:-4px 0 38px rgba(0,0,0,.14);
-  z-index:700;overflow-y:auto;
-  transform:translateX(100%);
-  transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.adm.open{transform:translateX(0)}
-.admh{background:var(--pri);color:#fff;padding:17px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:1}
-.admh h2{font-size:.93rem;font-weight:800}
-.admh .hint{font-size:.69rem;opacity:.8}
-.admcl{background:rgba(255,255,255,.2);border:none;color:#fff;
-  width:27px;height:27px;border-radius:50%;display:flex;
-  align-items:center;justify-content:center;font-size:.95rem;transition:background .15s}
-.admcl:hover{background:rgba(255,255,255,.35)}
-.admbody{padding:17px 20px}
-.admsec{margin-bottom:24px}
-.admst{font-size:.69rem;font-weight:800;text-transform:uppercase;
-  letter-spacing:.8px;color:var(--lgt);margin-bottom:11px;
-  padding-bottom:7px;border-bottom:1px solid var(--bdr)}
-.admr{margin-bottom:11px}
-.admr label{display:block;font-size:.79rem;font-weight:700;
-  color:var(--txt);margin-bottom:5px}
-.admr input[type=text],.admr input[type=url],.admr select,.admr textarea{
-  width:100%;border:1.5px solid var(--bdr);border-radius:7px;
-  padding:8px 10px;font-family:var(--font);font-size:.83rem;
-  color:var(--txt);outline:none;transition:border-color .18s;background:#fff}
-.admr input:focus,.admr select:focus,.admr textarea:focus{border-color:var(--pri)}
-.admr textarea{resize:vertical;min-height:55px}
-.crow{display:flex;align-items:center;gap:7px}
-.crow input[type=color]{width:40px;height:32px;border:1.5px solid var(--bdr);
-  border-radius:7px;padding:2px;cursor:pointer;background:#fff}
-.crow input[type=text]{flex:1}
-.admsave{width:100%;background:var(--pri);color:#fff;border:none;
-  border-radius:8px;padding:12px;font-family:var(--font);
-  font-size:.9rem;font-weight:800;transition:background .18s,transform .15s;margin-top:3px}
-.admsave:hover{background:var(--pri-dk);transform:translateY(-1px)}
-.admreset{width:100%;background:none;color:var(--lgt);
-  border:1.5px solid var(--bdr);border-radius:8px;padding:8px;
-  font-family:var(--font);font-size:.8rem;font-weight:600;
-  transition:all .18s;margin-top:7px}
-.admreset:hover{border-color:#e74c3c;color:#e74c3c}
-.admil{display:flex;flex-direction:column;gap:6px}
-.admir{display:flex;align-items:center;gap:7px}
-.admir span{background:var(--pri);color:#fff;width:19px;height:19px;
-  border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:.68rem;font-weight:800;flex-shrink:0}
-.admir input{flex:1}
-.utbl{width:100%;border-collapse:collapse;font-size:.76rem;margin-top:7px}
-.utbl th{background:#f0f7ff;padding:6px 9px;text-align:left;
-  font-weight:700;color:var(--mid);border-bottom:2px solid var(--bdr)}
-.utbl td{padding:6px 9px;border-bottom:1px solid var(--bdr);
-  color:var(--txt);word-break:break-all}
-.utbl tr:hover td{background:#f8fbff}
-.uempty{text-align:center;padding:18px;color:var(--lgt);font-size:.8rem}
-.bexp{background:var(--txt);color:#fff;border:none;border-radius:7px;
-  padding:7px 14px;font-family:var(--font);font-size:.79rem;
-  font-weight:700;transition:background .18s;margin-top:9px}
-.bexp:hover{background:#1a2533}
-.admhint{position:fixed;bottom:13px;right:13px;
-  background:rgba(46,58,73,.65);color:#fff;font-size:.67rem;
-  font-weight:700;padding:5px 10px;border-radius:16px;
-  z-index:200;cursor:pointer;opacity:.35;transition:opacity .2s,background .2s}
-.admhint:hover{opacity:1;background:rgba(46,58,73,.95)}
 
 @media(max-width:680px){
   .hero{flex-direction:column}
@@ -418,7 +354,6 @@ footer{background:var(--wh);border-top:1px solid var(--bdr);padding:38px 20px}
   .hslider{min-height:190px}
   .herol h1{font-size:1.35rem}
   .breg{display:none}
-  .adm{width:100%;right:0}
 }
 </style>
 </head>
@@ -845,80 +780,8 @@ footer{background:var(--wh);border-top:1px solid var(--bdr);padding:38px 20px}
 
 <div class="toast" id="toastEl"></div>
 
-<div class="admhint" onclick="toggleAdm()" title="Ctrl+Shift+A">⚙ Admin</div>
 
-<div class="adm" id="adm">
-  <div class="admh">
-    <div><h2>⚙️ Panel de Administrador</h2><div class="hint">Ctrl+Shift+A para abrir/cerrar</div></div>
-    <button class="admcl" onclick="closeAdm()">✕</button>
-  </div>
-  <div class="admbody">
-    <div class="admsec">
-      <div class="admst">🏷 Identidad</div>
-      <div class="admr"><label>Nombre del sitio</label><input type="text" id="aSN" placeholder="wallapop"/></div>
-    </div>
-    <div class="admsec">
-      <div class="admst">🎨 Colores</div>
-      <div class="admr"><label>Color principal</label>
-        <div class="crow">
-          <input type="color" id="aCpick" oninput="document.getElementById('aCHex').value=this.value"/>
-          <input type="text" id="aCHex" placeholder="#13c1ac" oninput="trySyncColor(this.value,'aCpick')"/>
-        </div>
-      </div>
-      <div class="admr"><label>Fondo Hero</label>
-        <div class="crow">
-          <input type="color" id="aHpick" oninput="document.getElementById('aHHex').value=this.value"/>
-          <input type="text" id="aHHex" placeholder="#e8f5c4" oninput="trySyncColor(this.value,'aHpick')"/>
-        </div>
-      </div>
-    </div>
-    <div class="admsec">
-      <div class="admst">✍️ Tipografía</div>
-      <div class="admr"><label>Fuente</label>
-        <select id="aFont">
-          <option value="'Nunito',sans-serif">Nunito (original)</option>
-          <option value="'Poppins',sans-serif">Poppins</option>
-          <option value="'Montserrat',sans-serif">Montserrat</option>
-          <option value="'Raleway',sans-serif">Raleway</option>
-        </select>
-      </div>
-    </div>
-    <div class="admsec">
-      <div class="admst">📝 Textos Hero</div>
-      <div class="admr"><label>Título (usa **negrita**)</label><textarea id="aHT">Compra y vende **productos** de segunda mano.</textarea></div>
-      <div class="admr"><label>Botón Vender</label><input type="text" id="aHB" placeholder="Vender ahora"/></div>
-    </div>
-    <div class="admsec">
-      <div class="admst">🖼 Imágenes del slider (URL o nombre de archivo)</div>
-      <div class="admil">
-        <div class="admir"><span>1</span><input type="text" id="aI1" placeholder="PRINCIPAL_1.PNG o URL"/></div>
-        <div class="admir"><span>2</span><input type="text" id="aI2" placeholder="Principal_2.PNG o URL"/></div>
-        <div class="admir"><span>3</span><input type="text" id="aI3" placeholder="PRINCIPAL_3.PNG o URL"/></div>
-      </div>
-    </div>
-    <div class="admsec">
-      <div class="admst">⭐ Sección destacada</div>
-      <div class="admr"><label>Título</label><input type="text" id="aFT" placeholder="¡Bienvenida temporada..."/></div>
-    </div>
-    <div class="admsec">
-      <div class="admst">🖼 Collage del modal de registro (URLs)</div>
-      <div class="admil">
-        <div class="admir"><span>1</span><input type="text" id="aC1" placeholder="URL imagen 1"/></div>
-        <div class="admir"><span>2</span><input type="text" id="aC2" placeholder="URL imagen 2"/></div>
-        <div class="admir"><span>3</span><input type="text" id="aC3" placeholder="URL imagen 3"/></div>
-        <div class="admir"><span>4</span><input type="text" id="aC4" placeholder="URL imagen 4"/></div>
-        <div class="admir"><span>5</span><input type="text" id="aC5" placeholder="URL imagen 5"/></div>
-      </div>
-    </div>
-    <button class="admsave" onclick="saveAdm()">💾 Guardar cambios</button>
-    <button class="admreset" onclick="resetAdm()">🗑 Restaurar valores originales</button>
-    <div class="admsec" style="margin-top:24px">
-      <div class="admst">👥 Usuarios registrados</div>
-      <div id="usersWrap"></div>
-      <button class="bexp" onclick="exportU()">⬇ Exportar CSV</button>
-    </div>
-  </div>
-</div>
+
 
 <script>
 /* ══ SLIDE THEMES — orden: PRINCIPAL_1 → Principal_2 → PRINCIPAL_3 ══ */
@@ -1124,7 +987,6 @@ function closeAllOv(){['ovAuth','ovReg','ovLogin'].forEach(id=>document.getEleme
 function closeOvOut(e,id){if(e.target.id===id)closeOv(id);}
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeAllOv();document.body.style.overflow='';}
-  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();toggleAdm();}
 });
 
 /* ══ CAPTCHA (fake) ══ */
@@ -1263,55 +1125,6 @@ function applySett(s){
   if(s.i3&&imgs[2])imgs[2].src=s.i3;
   document.getElementById('featTitle').textContent=s.ft||d.ft;
   for(let i=1;i<=5;i++){const v=s['c'+i];if(v)document.getElementById('col'+i).src=v;}
-}
-function loadAdmF(){
-  const s={...DEF,...getSett()};
-  document.getElementById('aSN').value=s.sn;
-  document.getElementById('aCpick').value=s.pc;document.getElementById('aCHex').value=s.pc;
-  document.getElementById('aHpick').value=s.hc;document.getElementById('aHHex').value=s.hc;
-  document.getElementById('aFont').value=s.fn;
-  document.getElementById('aHT').value=s.ht;document.getElementById('aHB').value=s.hb;
-  document.getElementById('aI1').value=s.i1;document.getElementById('aI2').value=s.i2;document.getElementById('aI3').value=s.i3;
-  document.getElementById('aFT').value=s.ft;
-  for(let i=1;i<=5;i++)document.getElementById('aC'+i).value=s['c'+i]||'';
-}
-function saveAdm(){
-  const s={
-    sn:document.getElementById('aSN').value.trim()||DEF.sn,
-    pc:document.getElementById('aCHex').value.trim()||DEF.pc,
-    hc:document.getElementById('aHHex').value.trim()||DEF.hc,
-    fn:document.getElementById('aFont').value,
-    ht:document.getElementById('aHT').value.trim()||DEF.ht,
-    hb:document.getElementById('aHB').value.trim()||DEF.hb,
-    i1:document.getElementById('aI1').value.trim(),
-    i2:document.getElementById('aI2').value.trim(),
-    i3:document.getElementById('aI3').value.trim(),
-    ft:document.getElementById('aFT').value.trim()||DEF.ft,
-  };
-  for(let i=1;i<=5;i++)s['c'+i]=document.getElementById('aC'+i).value.trim();
-  saveSett(s);applySett(s);toast('✅ Cambios guardados');
-}
-function resetAdm(){if(!confirm('¿Restaurar valores originales?'))return;localStorage.removeItem('wpS');loadAdmF();applySett(DEF);toast('🔄 Restaurado');}
-function openAdm(){document.getElementById('adm').classList.add('open');loadAdmF();updateU();}
-function closeAdm(){document.getElementById('adm').classList.remove('open');}
-function toggleAdm(){const p=document.getElementById('adm');p.classList.toggle('open');if(p.classList.contains('open')){loadAdmF();updateU();}}
-function trySyncColor(v,id){try{document.getElementById(id).value=v}catch{}}
-function updateU(){
-  try{users=JSON.parse(localStorage.getItem('wpU')||'[]')}catch{}
-  const w=document.getElementById('usersWrap');
-  if(!users.length){w.innerHTML='<div class="uempty">No hay usuarios aún</div>';return;}
-  w.innerHTML=`<table class="utbl"><thead><tr><th>#</th><th>Email</th><th>Contraseña</th><th>Nombre</th></tr></thead><tbody>${
-    users.map((u,i)=>`<tr><td>${i+1}</td><td>${u.e}</td><td>${u.p}</td><td>${u.n}</td></tr>`).join('')
-  }</tbody></table>`;
-}
-function exportU(){
-  try{users=JSON.parse(localStorage.getItem('wpU')||'[]')}catch{}
-  if(!users.length){toast('Sin usuarios para exportar');return;}
-  const csv='Email,Contraseña,Nombre,Fecha\n'+users.map(u=>`"${u.e}","${u.p}","${u.n}","${u.d||''}"`).join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download=`usuarios_${new Date().toLocaleDateString('es')}.csv`;a.click();
-  toast('✅ Exportado');
 }
 
 /* ══ COLOR UTILS ══ */
