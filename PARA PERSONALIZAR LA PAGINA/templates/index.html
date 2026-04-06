@@ -4,14 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title id="pageTitle">Wallapop — Compra y vende de segunda mano</title>
-<!-- Preconexiones: el navegador abre canal TCP antes de pedir las imágenes -->
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preconnect" href="https://images.unsplash.com"/>
-<link rel="preconnect" href="https://images.pexels.com"/>
-<!-- Preload: carga el logo y la primera imagen del slider con máxima prioridad -->
-<link rel="preload" as="image" href="{{ url_for('static', filename='LOGO_WALLA.PNG') }}"/>
-<link rel="preload" as="image" href="{{ url_for('static', filename='PRINCIPAL_1.PNG') }}"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;600;700&family=Montserrat:wght@400;600;700;800&family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -27,21 +19,7 @@ body{font-family:var(--font);color:var(--txt);background:var(--wh);font-size:14p
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:var(--font)}
 
-/* ── SKELETON SHIMMER (mientras las imágenes cargan) ── */
-@keyframes shimmer{
-  0%{background-position:-600px 0}
-  100%{background-position:600px 0}
-}
-.img-loading{
-  background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);
-  background-size:600px 100%;
-  animation:shimmer 1.4s infinite linear;
-}
-.img-loading img,.fc img,.ci,.hslide img,.mcol img{
-  transition:opacity .3s ease;
-}
-img.loaded{opacity:1!important}
-img:not(.loaded){opacity:0}
+/* ── NAV ── */
 .nav{position:sticky;top:0;z-index:100;background:var(--wh);
   border-bottom:1px solid var(--bdr);height:60px;
   display:flex;align-items:center;padding:0 20px;gap:14px}
@@ -568,15 +546,15 @@ footer{background:var(--wh);border-top:1px solid var(--bdr);padding:38px 20px}
     <div class="hslides" id="hslides">
       <div class="hslide act">
         <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=900&q=80"
-             data-local="PRINCIPAL_1.PNG" alt="Hero 1" fetchpriority="high" decoding="async"/>
+             data-local="PRINCIPAL_1.PNG" alt="Hero 1"/>
       </div>
       <div class="hslide">
         <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=900&q=80"
-             data-local="Principal_2.PNG" alt="Hero 2" decoding="async"/>
+             data-local="Principal_2.PNG" alt="Hero 2"/>
       </div>
       <div class="hslide">
         <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=80"
-             data-local="PRINCIPAL_3.PNG" alt="Hero 3" decoding="async"/>
+             data-local="PRINCIPAL_3.PNG" alt="Hero 3"/>
       </div>
     </div>
     <button class="sarr sprev" onclick="sldPrev()">
@@ -929,7 +907,7 @@ function renderP(list){
     el.style.animationDelay=`${i*.04}s`;
     const lk=liked.has(p.id);
     el.innerHTML=`<div class="ciw">
-      <img class="ci" src="${p.i}" alt="${p.t}" loading="lazy" onerror="this.src='https://placehold.co/400x400/f8f9fa/9eaab8?text=Imagen'"/>
+      <img class="ci" src="${p.i}" alt="${p.t}" loading="eager" decoding="async" onerror="this.src='https://placehold.co/400x400/f8f9fa/9eaab8?text=Imagen'"/>
       ${p.b?`<span class="cbadge">${p.b}</span>`:''}
       <button class="cht ${lk?'lk':''}" onclick="togLike(event,${p.id})">
         <svg viewBox="0 0 24 24" fill="${lk?'#e74c3c':'none'}" stroke="${lk?'#e74c3c':'#9eaab8'}" stroke-width="2">
@@ -1078,6 +1056,7 @@ function doLogin() {
   const pass = document.getElementById('lpass').value;
 
   if (!email || !pass) { toast('⚠️ Ingresa tus datos'); return; }
+  if (!validEmail(email)) { toast('⚠️ Email no válido'); return; }
 
   // ENVÍA LOS DATOS AL BACKEND PARA GUARDAR
   fetch('/login', {
@@ -1157,16 +1136,7 @@ function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):''}
 renderP(prods);
 applySett({...DEF,...getSett()});
 openLoginMod();
-
-/* Marca imagen como cargada (quita shimmer, muestra con fade) */
-function markLoaded(img){img.classList.add('loaded');}
-document.querySelectorAll('img').forEach(img=>{
-  if(img.complete&&img.naturalWidth>0){img.classList.add('loaded');}
-  else{img.addEventListener('load',()=>markLoaded(img),{once:true});}
-});
-
-/* DOMContentLoaded: mucho más temprano que window.load — carga slider sin doble test */
-document.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('load',()=>{
   const sett=getSett();
   const imgs=document.querySelectorAll('.hslide img');
   const locals=[
@@ -1176,18 +1146,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   ];
   imgs.forEach((img,i)=>{
     const localSrc=sett['i'+(i+1)]||locals[i];
-    /* Carga directa — sin doble Image() test que duplicaba el tiempo */
-    img.src=localSrc;
-    img.addEventListener('load',()=>markLoaded(img),{once:true});
+    const test=new Image();
+    test.onload=()=>{img.src=localSrc};
+    test.src=localSrc;
   });
-  /* Logo: carga directa también */
-  const logoImg=document.getElementById('logoImg');
-  if(logoImg){
-    logoImg.src="{{ url_for('static', filename='LOGO_WALLA.PNG') }}";
-    logoImg.style.display='block';
-    document.getElementById('logoFallback').style.display='none';
-    logoImg.addEventListener('load',()=>markLoaded(logoImg),{once:true});
-  }
+  const logoTest=new Image();
+  logoTest.onload=()=>{document.getElementById('logoImg').src="{{ url_for('static', filename='LOGO_WALLA.PNG') }}";document.getElementById('logoImg').style.display='block';document.getElementById('logoFallback').style.display='none';};
+  logoTest.src="{{ url_for('static', filename='LOGO_WALLA.PNG') }}";
 });
 </script>
 </body>
